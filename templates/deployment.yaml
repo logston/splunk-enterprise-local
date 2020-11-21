@@ -26,6 +26,9 @@ spec:
             - name: http
               containerPort: 8000
               protocol: TCP
+            - name: hec
+              containerPort: 8088
+              protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
@@ -34,8 +37,25 @@ spec:
                 configMapKeyRef:
                   name: {{ include "splunk-enterprise-local.fullname" . }}
                   key: splunk_start_args
+            - name: SPLUNK_LICENSE_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "splunk-enterprise-local.fullname" . }}
+                  key: splunk_license_uri
             - name: SPLUNK_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ include "splunk-enterprise-local.fullname" . }}
                   key: splunk_password
+          volumeMounts:
+            - name: splunk-var
+              mountPath: /opt/splunk/var
+            - name: splunk-etc
+              mountPath: /opt/splunk/etc
+      volumes:
+        - name: splunk-var
+          persistentVolumeClaim:
+            claimName: local-splunk-var
+        - name: splunk-etc
+          persistentVolumeClaim:
+            claimName: local-splunk-etc

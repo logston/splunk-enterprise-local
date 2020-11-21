@@ -5,14 +5,23 @@ metadata:
   labels:
     {{- include "splunk-enterprise-local.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.services.type }}
   ports:
-      # port that pod uses internal to the cluster
-    - port: {{ .Values.service.port }}
-      # port that container speaks on
+      # port that container speaks on via the pod ip
+    - port: {{ .Values.services.http.port }}
+      # port that container speaks on natively
       targetPort: http
       protocol: TCP
       name: http
-      nodePort: {{ .Values.service.nodePort }}
+      # port that container is accessible on from out
+      nodePort: {{ .Values.services.http.nodePort }}
+      # port that container speaks on via the pod ip
+    - port: {{ .Values.services.hec.port }}
+      # port that container speaks on natively
+      targetPort: hec
+      protocol: TCP
+      name: hec
+      # port that container is accessible on from out
+      nodePort: {{ .Values.services.hec.nodePort }}
   selector:
     {{- include "splunk-enterprise-local.selectorLabels" . | nindent 4 }}

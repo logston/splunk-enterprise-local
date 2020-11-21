@@ -6,3 +6,4 @@ metadata:
     {{- include "splunk-enterprise-local.labels" . | nindent 4 }}
 data:
   splunk_start_args: "--accept-license"
+  splunk_license_uri: "Free"

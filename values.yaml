@@ -10,7 +10,11 @@ image:
 
 podAnnotations: {}
 
-service:
+services:
   type: NodePort
-  port: 8000
-  nodePort: 32767
+  http:
+      port: 8000
+      nodePort: 32080
+  hec:
+      port: 8088
+      nodePort: 32088
