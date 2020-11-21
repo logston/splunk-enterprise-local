@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "splunk-enterprise-local.fullname" . }}
+  labels:
+    {{- include "splunk-enterprise-local.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+      # port that pod uses internal to the cluster
+    - port: {{ .Values.service.port }}
+      # port that container speaks on
+      targetPort: http
+      protocol: TCP
+      name: http
+      nodePort: {{ .Values.service.nodePort }}
+  selector:
+    {{- include "splunk-enterprise-local.selectorLabels" . | nindent 4 }}
